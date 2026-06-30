@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>САН РЕМО — Меню доставки</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold:   #C49A2A;
+    --goldl:  #F0D878;
+    --blue:   #1B3A6B;
+    --bluel:  #2A5298;
+    --cream:  #FEFBF0;
+    --cream2: #FDF5DC;
+    --lemon:  #F5E642;
+    --green:  #4A7C3F;
+    --dark:   #1A1A1A;
+    --grey:   #777;
+  }
+
+  body {
+    background: var(--cream);
+    font-family: 'Open Sans', sans-serif;
+    color: var(--dark);
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--blue);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .header-tile {
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(42,82,152,0.4) 31px, rgba(42,82,152,0.4) 32px),
+                      repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(42,82,152,0.4) 31px, rgba(42,82,152,0.4) 32px);
+    padding: 28px 20px 24px;
+    position: relative;
+  }
+  .header-border {
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    padding: 20px 16px 18px;
+    position: relative;
+  }
+  .header-border::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 0.8px solid var(--gold);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+  .header-inner {
+    background: rgba(13,37,71,0.92);
+    border-radius: 6px;
+    padding: 22px 30px 18px;
+    display: inline-block;
+    min-width: 280px;
+    position: relative;
+  }
+  .header-deco {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .header-deco-line { flex: 1; height: 1px; background: var(--gold); max-width: 120px; }
+  .header-deco-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  .header-lemons {
+    display: flex; justify-content: space-between; align-items: center;
+    position: absolute; left: 12px; right: 12px; top: 50%; transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .lemon-group { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .lemon {
+    font-size: 28px; line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  }
+  .lemon.sm { font-size: 20px; }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: var(--goldl);
+    letter-spacing: 3px;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 1rem;
+    color: var(--cream);
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 780px; margin: 0 auto; padding: 20px 16px 32px; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 14px; }
+  .sec-header {
+    background: var(--blue);
+    border-radius: 6px;
+    padding: 10px 14px 10px 46px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .sec-header::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: var(--gold);
+    border-radius: 6px 0 0 6px;
+  }
+  .sec-lemon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 18px; line-height: 1;
+  }
+  .sec-title {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600; font-size: 1rem;
+    color: var(--goldl);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .sec-dots { display: flex; gap: 5px; }
+  .sec-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  /* ── SUBSECTION ── */
+  .subsection-label {
+    font-size: 0.85rem; font-weight: 600;
+    color: var(--gold);
+    padding: 6px 8px 3px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* ── ROWS ── */
+  .menu-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0 12px;
+    padding: 8px 10px;
+    align-items: baseline;
+  }
+  .menu-row:nth-child(odd)  { background: var(--cream); }
+  .menu-row:nth-child(even) { background: var(--cream2); }
+  .menu-row:last-child { border-bottom: 1.5px solid var(--goldl); }
+  .row-name  { font-size: 1rem; color: var(--dark); line-height: 1.4; }
+  .row-weight { font-size: 0.85rem; color: var(--grey); white-space: nowrap; text-align: right; }
+  .row-price  { font-size: 1rem; font-weight: 600; color: var(--dark); white-space: nowrap; text-align: right; min-width: 64px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 18px 0 14px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--gold); }
+  .divider-lemon { font-size: 22px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--blue);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(42,82,152,0.4) 23px, rgba(42,82,152,0.4) 24px),
+                      repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(42,82,152,0.4) 23px, rgba(42,82,152,0.4) 24px);
+    border-top: 2px solid var(--gold);
+    padding: 14px;
+    text-align: center;
+    margin-top: 24px;
+    border-radius: 0 0 6px 6px;
+  }
+  .footer-lemons { font-size: 18px; margin-bottom: 4px; letter-spacing: 12px; }
+  .footer-text { font-size: 0.85rem; color: var(--cream); letter-spacing: 1px; }
+
+  @media print {
+    body { font-size: 13px; }
+    .container { padding: 8px; }
+    h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-tile">
+    <div class="header-border">
+      <div class="header-lemons">
+        <div class="lemon-group">
+          <span class="lemon">🍋</span>
+          <span class="lemon sm">🍋</span>
+        </div>
+        <div class="lemon-group">
+          <span class="lemon sm">🍋</span>
+          <span class="lemon">🍋</span>
+        </div>
+      </div>
+      <div class="header-inner">
+        <div class="header-deco">
+          <div class="header-deco-line"></div>
+          <div class="header-deco-diamond"></div>
+          <div class="header-deco-line"></div>
+        </div>
+        <h1>САН РЕМО</h1>
+        <div class="subtitle">Меню доставки</div>
+        <div class="header-deco" style="margin-top:10px;margin-bottom:0">
+          <div class="header-deco-line"></div>
+          <div class="header-deco-diamond"></div>
+          <div class="header-deco-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- САЛАТЫ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Салаты</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Греческий</span><span class="row-weight">280 г</span><span class="row-price">690 р</span></div>
+  <div class="menu-row"><span class="row-name">Цезарь с курицей</span><span class="row-weight">340 г</span><span class="row-price">650 р</span></div>
+  <div class="menu-row"><span class="row-name">Цезарь с креветкой</span><span class="row-weight">290 г</span><span class="row-price">980 р</span></div>
+  <div class="menu-row"><span class="row-name">С хрустящими баклажанами</span><span class="row-weight">310 г</span><span class="row-price">750 р</span></div>
+</div>
+
+<!-- ПЕРВЫЕ БЛЮДА -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Первые блюда</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Борщ с говядиной</span><span class="row-weight">350 г</span><span class="row-price">730 р</span></div>
+  <div class="menu-row"><span class="row-name">Суп-лапша</span><span class="row-weight">350 г</span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Окрошка на кефире</span><span class="row-weight">300 г</span><span class="row-price">670 р</span></div>
+</div>
+
+<!-- ГАРНИРЫ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Гарниры</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Картофель фри</span><span class="row-weight">150 г</span><span class="row-price">390 р</span></div>
+  <div class="menu-row"><span class="row-name">Батат фри с пармезаном</span><span class="row-weight">150 г</span><span class="row-price">450 р</span></div>
+</div>
+
+<!-- ГОРЯЧИЕ ЗАКУСКИ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Горячие закуски</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Хвосты тигровых креветок в соусе</span><span class="row-weight">270 г</span><span class="row-price">1 490 р</span></div>
+  <div class="menu-row"><span class="row-name">Мидии в сырном соусе чиз</span><span class="row-weight">310 г</span><span class="row-price">930 р</span></div>
+  <div class="menu-row"><span class="row-name">Мидии в томатном соусе</span><span class="row-weight">310 г</span><span class="row-price">930 р</span></div>
+  <div class="menu-row"><span class="row-name">Улитки</span><span class="row-weight">150 г</span><span class="row-price">670 р</span></div>
+  <div class="menu-row"><span class="row-name">Сырные палочки</span><span class="row-weight">180 г</span><span class="row-price">460 р</span></div>
+</div>
+
+<!-- РЫБА -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Рыба</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Барабуля Черноморская</span><span class="row-weight">цена за 100 г</span><span class="row-price">470 р</span></div>
+  <div class="menu-row"><span class="row-name">Сарган Черноморский</span><span class="row-weight">цена за 100 г</span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Дорадо на гриле</span><span class="row-weight">цена за 100 г</span><span class="row-price">590 р</span></div>
+  <div class="menu-row"><span class="row-name">Стейк лосося в сливочном песто</span><span class="row-weight">280 г</span><span class="row-price">1 350 р</span></div>
+</div>
+
+<!-- МЯСО И ПТИЦА -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Мясо и птица</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Стейк из свиного подгорка с картофелем</span><span class="row-weight">300 г</span><span class="row-price">1 150 р</span></div>
+  <div class="menu-row"><span class="row-name">Куриная грудка с брокколи</span><span class="row-weight">340 г</span><span class="row-price">830 р</span></div>
+  <div class="menu-row"><span class="row-name">Куриные котлетки</span><span class="row-weight">230 г</span><span class="row-price">570 р</span></div>
+</div>
+
+<!-- ПИЦЦА -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Пицца</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Маргарита</span><span class="row-weight">510 г</span><span class="row-price">690 р</span></div>
+  <div class="menu-row"><span class="row-name">Четыре сыра</span><span class="row-weight">480 г</span><span class="row-price">930 р</span></div>
+  <div class="menu-row"><span class="row-name">Пепперони</span><span class="row-weight">510 г</span><span class="row-price">890 р</span></div>
+  <div class="menu-row"><span class="row-name">С ветчиной и грибами</span><span class="row-weight">490 г</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">С курицей</span><span class="row-weight">590 г</span><span class="row-price">890 р</span></div>
+</div>
+
+<!-- ПАСТЫ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Пасты</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Болоньезе</span><span class="row-weight">350 г</span><span class="row-price">650 р</span></div>
+  <div class="menu-row"><span class="row-name">Карбонара</span><span class="row-weight">320 г</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">С морепродуктами в томатном соусе</span><span class="row-weight">350 г</span><span class="row-price">930 р</span></div>
+  <div class="menu-row"><span class="row-name">С морепродуктами в сливочном соусе</span><span class="row-weight">350 г</span><span class="row-price">930 р</span></div>
+  <div class="menu-row"><span class="row-name">С куриным филе и грибами</span><span class="row-weight">330 г</span><span class="row-price">690 р</span></div>
+  <div class="menu-row"><span class="row-name">С форелью и шпинатом</span><span class="row-weight">270 г</span><span class="row-price">890 р</span></div>
+  <div class="menu-row"><span class="row-name">Спагетти с сыром (детское)</span><span class="row-weight">200 г</span><span class="row-price">370 р</span></div>
+</div>
+
+<!-- СЭНДВИЧИ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Сэндвичи</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Сэндвич с курицей</span><span class="row-weight">390 г</span><span class="row-price">650 р</span></div>
+  <div class="menu-row"><span class="row-name">Сэндвич с форелью</span><span class="row-weight">380 г</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Сэндвич с тунцом</span><span class="row-weight">380 г</span><span class="row-price">670 р</span></div>
+</div>
+
+<!-- ЗАКУСКИ К ПИВУ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Закуски к пиву</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Брускетта с форелью и креветками</span><span class="row-weight">190 г</span><span class="row-price">880 р</span></div>
+  <div class="menu-row"><span class="row-name">Креветки жареные / отварные</span><span class="row-weight">100 г</span><span class="row-price">420 р</span></div>
+  <div class="menu-row"><span class="row-name">Куриные крылья</span><span class="row-weight">100 г</span><span class="row-price">310 р</span></div>
+  <div class="menu-row"><span class="row-name">Гренки ржаные</span><span class="row-weight">190 г</span><span class="row-price">430 р</span></div>
+  <div class="menu-row"><span class="row-name">Наггетсы</span><span class="row-weight">150 г</span><span class="row-price">490 р</span></div>
+</div>
+
+<!-- ПИВО -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Пиво</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="subsection-label">Разливное</div>
+  <div class="menu-row"><span class="row-name">Лёвенбрау светлое 4.8%</span><span class="row-weight">500 мл</span><span class="row-price">490 р</span></div>
+  <div class="menu-row"><span class="row-name">АББЕ светлое 6.6%</span><span class="row-weight">500 мл</span><span class="row-price">590 р</span></div>
+  <div class="subsection-label">Бутылочное</div>
+  <div class="menu-row"><span class="row-name">Корона Экстра 4.5% — импорт</span><span class="row-weight">330 мл</span><span class="row-price">540 р</span></div>
+  <div class="menu-row"><span class="row-name">Лёффе Блонд 6.6% — импорт</span><span class="row-weight">330 мл</span><span class="row-price">680 р</span></div>
+  <div class="menu-row"><span class="row-name">Лёффе Брюн 6.6% — импорт</span><span class="row-weight">330 мл</span><span class="row-price">680 р</span></div>
+  <div class="menu-row"><span class="row-name">АББЕ светлое / тёмное 6.6%</span><span class="row-weight">330 мл</span><span class="row-price">390 р</span></div>
+  <div class="menu-row"><span class="row-name">Хугарден н/ф 4.9%</span><span class="row-weight">470 мл</span><span class="row-price">390 р</span></div>
+  <div class="menu-row"><span class="row-name">Эль Капулько светлое 4.5%</span><span class="row-weight">450 мл</span><span class="row-price">370 р</span></div>
+  <div class="menu-row"><span class="row-name">Шпатен светлое 5.2%</span><span class="row-weight">450 мл</span><span class="row-price">430 р</span></div>
+  <div class="menu-row"><span class="row-name">Стелла Артуа б/а</span><span class="row-weight">440 мл</span><span class="row-price">350 р</span></div>
+</div>
+
+<div class="divider"><div class="divider-line"></div><span class="divider-lemon">🍋</span><div class="divider-line"></div></div>
+
+<!-- КОКТЕЙЛИ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Коктейли</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="subsection-label">Спритц</div>
+  <div class="menu-row"><span class="row-name">Апероль Спритц</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Кампари Спритц</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Маракуйа Спритц</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Сарти Спритц (роза, просекко, лайм)</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Гранат Юдзу</span><span class="row-weight">180 мл</span><span class="row-price">790 р</span></div>
+  <div class="subsection-label">Классические</div>
+  <div class="menu-row"><span class="row-name">Мартине Рояль</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Лонг Айленд</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Негрони</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Мохито</span><span class="row-weight">400 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Пина Колада</span><span class="row-weight">350 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Маргарита классическая</span><span class="row-weight">190 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Дайкири</span><span class="row-weight">400 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Май-Тай</span><span class="row-weight">400 мл</span><span class="row-price">790 р</span></div>
+  <div class="menu-row"><span class="row-name">Том Коллинз</span><span class="row-weight">400 мл</span><span class="row-price">790 р</span></div>
+</div>
+
+
+
+<div class="divider"><div class="divider-line"></div><span class="divider-lemon">🍋</span><div class="divider-line"></div></div>
+
+<!-- КОФЕ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Кофе</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="subsection-label">Горячий</div>
+  <div class="menu-row"><span class="row-name">Эспрессо</span><span class="row-weight">40 мл</span><span class="row-price">200 р</span></div>
+  <div class="menu-row"><span class="row-name">Американо</span><span class="row-weight">120 мл</span><span class="row-price">220 р</span></div>
+  <div class="menu-row"><span class="row-name">Флет Уайт</span><span class="row-weight">120 мл</span><span class="row-price">350 р</span></div>
+  <div class="menu-row"><span class="row-name">Капучино</span><span class="row-weight">200 / 300 мл</span><span class="row-price">280 / 380 р</span></div>
+  <div class="menu-row"><span class="row-name">Капучино на альтернативном молоке</span><span class="row-weight">200 / 300 мл</span><span class="row-price">380 / 480 р</span></div>
+  <div class="menu-row"><span class="row-name">Латте</span><span class="row-weight">250 мл</span><span class="row-price">310 р</span></div>
+  <div class="menu-row"><span class="row-name">Латте на альтернативном молоке</span><span class="row-weight">250 мл</span><span class="row-price">370 р</span></div>
+  <div class="menu-row"><span class="row-name">Кофе по-восточному</span><span class="row-weight">60 мл</span><span class="row-price">220 р</span></div>
+  <div class="menu-row"><span class="row-name">Раф</span><span class="row-weight">300 мл</span><span class="row-price">390 р</span></div>
+  <div class="subsection-label">Холодный</div>
+  <div class="menu-row"><span class="row-name">Шмель</span><span class="row-weight">380 мл</span><span class="row-price">430 р</span></div>
+  <div class="menu-row"><span class="row-name">Глясе</span><span class="row-weight">200 мл</span><span class="row-price">390 р</span></div>
+  <div class="menu-row"><span class="row-name">Фраппучино</span><span class="row-weight">330 мл</span><span class="row-price">370 р</span></div>
+  <div class="subsection-label">Горячий шоколад / Какао</div>
+  <div class="menu-row"><span class="row-name">Горячий шоколад</span><span class="row-weight">200 мл</span><span class="row-price">360 р</span></div>
+  <div class="menu-row"><span class="row-name">Какао</span><span class="row-weight">200 мл</span><span class="row-price">360 р</span></div>
+</div>
+
+<!-- ЛИМОНАДЫ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Лимонады (400 мл)</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Мохито</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Классический</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Киви-фейхоа-огурец</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Лайм-мята-алоэ</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Облепиховый</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Сан Ремо</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Лаванда-личи</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Манго-маракуйя</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+  <div class="menu-row"><span class="row-name">Имбирный</span><span class="row-weight"></span><span class="row-price">450 р</span></div>
+</div>
+
+<!-- ПРОХЛАДИТЕЛЬНЫЕ НАПИТКИ -->
+<div class="section">
+  <div class="sec-header">
+    <span class="sec-lemon">🍋</span>
+    <span class="sec-title">Прохладительные напитки</span>
+    <div class="sec-dots"><div class="sec-dot"></div><div class="sec-dot"></div><div class="sec-dot"></div></div>
+  </div>
+  <div class="menu-row"><span class="row-name">Добрый Кола / Фанта / Спрайт / Швепс</span><span class="row-weight">250 мл</span><span class="row-price">250 р</span></div>
+  <div class="menu-row"><span class="row-name">Кока-Кола оригинал</span><span class="row-weight">330 мл</span><span class="row-price">380 р</span></div>
+  <div class="menu-row"><span class="row-name">Вода ТАСАЙ газ / не газ</span><span class="row-weight">500 мл</span><span class="row-price">350 р</span></div>
+  <div class="menu-row"><span class="row-name">Вода Недра Премиум газ / не газ</span><span class="row-weight">750 мл</span><span class="row-price">550 р</span></div>
+  <div class="menu-row"><span class="row-name">Боржоми</span><span class="row-weight">500 мл</span><span class="row-price">350 р</span></div>
+  <div class="menu-row"><span class="row-name">Сок в ассортименте</span><span class="row-weight">200 мл</span><span class="row-price">250 р</span></div>
+  <div class="menu-row"><span class="row-name">Свежевыжатый сок апельсин</span><span class="row-weight">200 мл</span><span class="row-price">390 р</span></div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <div class="footer-lemons">🍋 🍋 🍋</div>
+  <div class="footer-text">САН РЕМО · Меню актуально для доставки</div>
+</div>
+
+</body>
+</html>
